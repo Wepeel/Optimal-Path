@@ -1,0 +1,19 @@
+<html lang="en">
+    <%- include("./partials/head.ejs") %>
+
+    <body>
+        <%- include("./partials/nav.ejs") %>
+
+        <% if (patients.length> 0) {%>
+            <% patients.forEach(patient=>{ %>
+                <a href="/patients/<%= patient._id %>">
+                    <h3><%= patient.first_name %> <%= patient.last_name%></h3>
+                </a>
+            <% }) %>
+        <% }else{ %>
+            <p>No patients</p>
+        <% } %>
+
+        <%- include("./partials/footer.ejs") %>
+    </body>
+</html>
