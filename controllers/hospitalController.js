@@ -1,7 +1,7 @@
 const Hospital = require('../models/hospital');
-const fs = require('fs');
+const mongoose = require('mongoose');
 
-const hospitals;
+var hospitals;
 
 const initialize_db_connection = async ()=>
 {
@@ -10,6 +10,13 @@ const initialize_db_connection = async ()=>
     try
     {
         await mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true });
+        var temp_hospitals = await Hospital.find({});
+        hospitals = [];
+        for ({long: long, latitude: latitude} of temp_hospitals)
+        {
+            hospitals.push({long,latitude});
+        }
+        console.log(hospitals)
     }
     catch(err)
     {
@@ -22,3 +29,8 @@ const get_nearest_hospital = (req, res)=>
 {
 
 }
+
+module.exports = 
+{
+    initialize_db_connection
+};
