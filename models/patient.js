@@ -13,7 +13,13 @@ const patientSchema = new Schema(
     {
         type: String,
         required: true
+    },
+
+    hospital:
+    {
+        type: String
     }
+
 }, { timestamps: true });
 
 const Patient = mongoose.model('Patient', patientSchema);
