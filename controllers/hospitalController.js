@@ -4,6 +4,25 @@ const mongoose = require('mongoose');
 
 var hospitals;
 
+const get_distance = (loc1, loc2)=>
+{
+    const lon1 = loc1.longitude, lon2 = loc2.longitude;
+    const lat1 = loc1.latitude, lat2 = loc2.latitude;
+
+    const R = 6371e3; // metres
+    const phi1 = lat1 * Math.PI/180;
+    const phi2 = lat2 * Math.PI/180;
+    const delta_phi = (lat2-lat1) * Math.PI/180;
+    const delta_lambda = (lon2-lon1) * Math.PI/180;
+
+    const a = Math.sin(delta_phi/2) * Math.sin(delta_phi/2) +
+            Math.cos(phi1) * Math.cos(phi2) *
+            Math.sin(delta_lambda/2) * Math.sin(delta_lambda/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+    return R * c; // in metres
+}
+
 const initialize_db_connection = async ()=>
 {
 
@@ -13,24 +32,17 @@ const initialize_db_connection = async ()=>
         await mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true });
         var temp_hospitals = await Hospital.find({});
         hospitals = [];
-        for ({long: long, latitude: latitude} of temp_hospitals)
+        for ({longitude: longitude, latitude: latitude} of temp_hospitals)
         {
-            hospitals.push({long,latitude});
+            hospitals.push({longitude,latitude});
         }
-        console.log(hospitals)
+        console.log(hospitals);
+        console.log("Distance: ", hospitals[1], hospitals[2], get_distance(hospitals[1],hospitals[2]) / 1000);
     }
     catch(err)
     {
         console.log(err);
     }
-}
-
-const get_distance = (loc1, loc2)=>
-{
-    return Math.sqrt(
-        (Math.pow(loc1.long - loc2.long), 2)
-        (Math.pow(loc1.latitude - loc2.latitude), 2)
-        )
 }
 
 const get_viable_hospitals = async (req, res)=>
@@ -39,7 +51,7 @@ const get_viable_hospitals = async (req, res)=>
     location = req.body.location;
     department = req.body.department;
     let viable_hospitals = [];
-    hospitals.forEach(hosp=>
+    hospitals.forEach(async (hosp)=>
     {
         let doctors = await Doctor.find({});
         if(
@@ -50,7 +62,7 @@ const get_viable_hospitals = async (req, res)=>
         )
         // If there is a doctor that matches the needed hospital and criteria
         {
-            if (get_distance(hosp, location) <= radius)
+            if (Math.floor(get_distance(hosp, location)/1000) <= radius)
             {
                 viable_hospitals.push(hosp);
             }

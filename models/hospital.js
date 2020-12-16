@@ -9,7 +9,7 @@ const hospitalSchema = new Schema(
         required: true
     },
 
-    long:
+    longitude:
     {
         type: Number,
         required: true
@@ -20,19 +20,6 @@ const hospitalSchema = new Schema(
         type: Number,
         required: true
     },
-
-    cardiology:
-    {
-        type: Boolean,
-        required: true
-    },
-
-    neurology:
-    {
-        type: Boolean,
-        required: true
-    }
-
 
 }, { timestamps: true });
 
