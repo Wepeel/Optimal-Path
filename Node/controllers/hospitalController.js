@@ -49,35 +49,20 @@ const get_viable_hospitals = async (location, department)=>
     
     let temp_hospitals = hospitals.filter(hosp=>
     {
-        return hosp.load < 100;
+        return hosp.load_percentage < 100;
     });
 
-    for(hosp of temp_hospitals)
-    {
-        hosp.has_dept = true;
-        if (department != "All")
-        {
-            hosp.has_dept = Doctor.exists({department:department, hospital:hosp});
-        }
-    }
-
-    let viable_hospitals;
-    viable_hospitals = temp_hospitals.sort((a, b)=>
+    temp_hospitals.sort((a, b)=>
     {
         return get_distance(b, location) - get_distance(a, location);
     }).slice(num_hospitals);
 
-
-
-    return viable_hospitals.map(item=>
-        {
-            return {dist:get_distance(item, location), has_dept:item.has_dept,
-                 load_percentage:item.load}
-        });
+    return temp_hospitals;
 }
 
 module.exports = 
 {
     initialize_db_connection,
-    get_viable_hospitals
+    get_viable_hospitals,
+    get_distance
 };

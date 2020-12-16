@@ -5,26 +5,23 @@ PORT = 4444
 
 
 class Hospital:
-    def __init__(self, id_, dist, has_dept, load_percentage):
+    def __init__(self, id_, data):
         self.id = id_
-        self.dist = dist
-        self.has_dept = has_dept
-        self.load_percentage = load_percentage
+        self.dist = int(data['dist'])
+        self.has_dept = data['has_dept']
+        self.load_percentage = int(data['load_percentage'])
 
 
-def get_hsp(hosp_list, stable):
+def get_hsp(hospitals, stable):
     """
     
+    :param hospitals: 
     :param stable:
-    :param hosp_list: list of (name, dist, has_dept, load_percentage, stable)
     :return: 
     """
     # model.predict(hosp)
     closest = ''
-    hospitals = []
     has_dept = []
-    for hosp in hosp_list:
-        hospitals.append(Hospital(*hosp))
 
     # approximation of the distance
     for hosp1 in hospitals:
@@ -61,9 +58,8 @@ def translate_data(data):
     for hosp in data:
         if hosp == 'stable':
             continue
-        hosp_data = [hosp, *data[hosp]]
-        hospitals.append(hosp_data)
-    hospitals.sort(key=lambda x: x[1])
+        hospitals.append(Hospital(hosp, data[hosp]))
+    hospitals.sort(key=lambda x: x.dist)
     return get_hsp(hospitals, stable)
 
 
@@ -75,18 +71,13 @@ def main():
         server_socket.listen()
         (client_socket, client_address) = server_socket.accept()
         # handle requests until user asks to exit
-        flag = True
-        while flag:
-            rec = client_socket.recv(8192).decode()
-            rec = json.loads(rec)
-            res = translate_data(rec)
-            print(res)
-            client_socket.send(res.encode())
-            flag = False
+        rec = client_socket.recv(8192).decode()
+        rec = json.loads(rec)
+        res = translate_data(rec)
+        client_socket.send(res.encode())
         print("Closing connection")
         client_socket.close()
         server_socket.close()
-        break
 
 
 if __name__ == "__main__":

@@ -84,7 +84,6 @@ def main():
         print("Closing connection")
         client_socket.close()
         server_socket.close()
-        break
 
 
 if __name__ == "__main__":
