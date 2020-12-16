@@ -28,6 +28,7 @@ app.use(morgan('dev'));
 app.set('view engine', 'ejs');
 
 app.use('/patients', patientsRoutes);
+app.use('/', hospitalRoutes);
 
 app.get('/', (req, res)=>
 {
