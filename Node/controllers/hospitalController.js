@@ -45,7 +45,7 @@ const initialize_db_connection = async ()=>
 
 const get_viable_hospitals = async (req, res)=>
 {
-    const radius = 15;
+    const radius = 25;
     const location = req.body.location;
     const department = req.body.department;
     let viable_hospitals = [];
