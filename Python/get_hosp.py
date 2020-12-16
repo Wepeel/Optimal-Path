@@ -1,3 +1,9 @@
+import json
+import socket
+PORT = 4444
+
+
+
 class Hospital:
     def __init__(self, id_, dist, has_dept, load_percentage):
         self.id = id_
@@ -49,17 +55,36 @@ def get_hsp(hosp_list, stable):
             return hospitals[0].id
 
 
-def translate_data(json):
+def translate_data(data):
     hospitals = []
-    stable = json['stable']
-    for hosp in json:
+    stable = data['stable']
+    for hosp in data:
         if hosp == 'stable':
             continue
-        hosp_data = [hosp, *json[hosp]]
+        hosp_data = [hosp, *data[hosp]]
         hospitals.append(hosp_data)
     hospitals.sort(key=lambda x: x[1])
     return get_hsp(hospitals, stable)
 
 
-def main(json):
-    translate_data(json)
+def main():
+    while True:
+        # open socket with client
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.bind(("127.0.0.1", PORT))
+        server_socket.listen()
+        (client_socket, client_address) = server_socket.accept()
+        # handle requests until user asks to exit
+        flag = True
+        while flag:
+            rec = client_socket.recv(8192).decode()
+            rec = json.loads(rec)
+            res = translate_data(rec)
+            client_socket.send(res.encode())
+        print("Closing connection")
+        client_socket.close()
+        server_socket.close()
+
+
+if __name__ == "__main__":
+    main()
