@@ -1,3 +1,6 @@
+import socket
+import json
+
 dic = {
     'nausea': 'nausea',
     'unhahe': 'unequal hand height',
@@ -40,6 +43,10 @@ imp_symptoms = {
     'pneumonia': ['fever', 'damp cough', 'chest pain']
 }
 
+IP = '127.0.0.1'
+
+PORT = 5555
+
 
 def any_in(a, b):
     return any(i in b for i in a)
@@ -55,4 +62,28 @@ def translate_symptoms(symptoms):
     translated = []
     for i in symptoms:
         translated.append(dic[i])
-    print(understand_problem(translated))
+    return understand_problem(translated)
+
+
+def main():
+    while True:
+        # open socket with client
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.bind(("127.0.0.1", PORT))
+        server_socket.listen()
+        (client_socket, client_address) = server_socket.accept()
+        # handle requests until user asks to exit
+        rec = client_socket.recv(8192).decode()
+        rec = json.loads(rec)
+        symptom_codes = rec['symptoms']
+        if rec['breathing'] == 1:
+            symptom_codes += 'difbr'
+        res = translate_symptoms(symptom_codes)
+        client_socket.send(res.encode())
+        print("Closing connection")
+        client_socket.close()
+        server_socket.close()
+
+
+if __name__ == "__main__":
+    main()
