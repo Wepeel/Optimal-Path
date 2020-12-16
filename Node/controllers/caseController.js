@@ -1,31 +1,60 @@
-const spawn = require("child_process").spawn;
+const Hospital = require('../models/hospital');
 
-const { get_viable_hospitals } = require('./hospitalController');
+const net = require('net');
+
+const {get_viable_hospitals} = require('./hospitalController');
 
 const case_post = (req, res)=>
 {
     let data = req.body;
     const location = data.location;
-    
-    let pythonProcess = spawn('python', ["../Python/get_problem.py", data]);
+    let department;
 
-    pythonProcess.stdout.on('data', new_data=>
+    const client = new net.Socket();
+    client.connect(5555, '127.0.0.1',()=>
     {
-        data = new_data;
+        client.write(data);
+    })
+
+    client.on('data', data=>
+    {
+        if (data == "mi")
+        {
+            department = "Cardiology";
+        }
+
+        else if (data == "stroke")
+        {
+            department = "Neurology";
+        }
+
+        else
+        {
+            department = "All";
+        }
     });
 
-    pythonProcess.on('close', new_data=>
+    client.on('close', ()=>
     {
-        pythonProcess = spawn('python', ["../Python/get_hosp.py",
-        await get_viable_hospital(location, data.department), data]);
+        get_viable_hospitals(location, department)
+            .then(data=>{viable=data});
+        client.connect(4444, '127.0.0.1', ()=>
+        {
+            client.write(data);
+        });
+
+        client.on('data', new_data=>
+        {
+            data = new_data;
+        });
+
+        client.on('close', ()=>
+        {
+            Hospital.findById(data)
+                .then(newd=>res.send(newd));
+        })
     });
 
-    pythonProcess.stdout.on('data', new_data=>
-    {
-        data = new_data;
-    });
-
-    res.send(data);
 }
 
 module.exports = 
