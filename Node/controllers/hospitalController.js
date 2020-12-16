@@ -67,7 +67,13 @@ const get_viable_hospitals = async (location, department)=>
         return get_distance(b, location) - get_distance(a, location);
     }).slice(num_hospitals);
 
-    return viable_hospitals;
+
+
+    return viable_hospitals.map(item=>
+        {
+            return {dist:get_distance(item, location), has_dept:item.has_dept,
+                 load_percentage:item.load}
+        });
 }
 
 module.exports = 

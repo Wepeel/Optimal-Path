@@ -79,10 +79,12 @@ def main():
         if rec['breathing'] == 1:
             symptom_codes += 'difbr'
         res = translate_symptoms(symptom_codes)
+        print(res)
         client_socket.send(res.encode())
         print("Closing connection")
         client_socket.close()
         server_socket.close()
+        break
 
 
 if __name__ == "__main__":

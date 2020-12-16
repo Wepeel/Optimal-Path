@@ -80,10 +80,13 @@ def main():
             rec = client_socket.recv(8192).decode()
             rec = json.loads(rec)
             res = translate_data(rec)
+            print(res)
             client_socket.send(res.encode())
+            flag = False
         print("Closing connection")
         client_socket.close()
         server_socket.close()
+        break
 
 
 if __name__ == "__main__":
