@@ -46,7 +46,7 @@ def get_hsp(hospitals, stable):
     if stable:
         has_dept = [h for h in hospitals if h.has_dept]
         for hosp in has_dept:
-            if hosp.dist < 50:
+            if hosp.dist < 50000:
                 return hosp.id
         else:
             return hospitals[0].id

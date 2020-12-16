@@ -34,12 +34,12 @@ const case_post = (req, res)=>
         {
             department = "All";
         }
-
-        console.log("-------------------", data.toString(), department);
     });
 
     client.on('close', ()=>
     {
+        client.destroy();
+        let client2 = new net.Socket();
         get_viable_hospitals(location, department)
             .then( async (data)=>
             {
@@ -54,22 +54,22 @@ const case_post = (req, res)=>
                         dist:get_distance(location, item)}
                 }));
 
-                console.log(newd);
-
-                client.connect(4444, '127.0.0.1', ()=>
+                client2.connect(4444, '127.0.0.1', ()=>
                 {
-                    client.write(JSON.stringify(newd));
+                    client2.write(JSON.stringify(newd));
                 });
 
-                client.on('data', new_data=>
+                client2.on('data', new_data=>
                 {
                     data = new_data;
                 });
 
-                client.on('close', ()=>
+                client2.on('close', ()=>
                 {
                     Hospital.findById(data)
                         .then(newd=>res.send(newd));
+                    client2.destroy();
+                    return;
                 })
             });
     });
