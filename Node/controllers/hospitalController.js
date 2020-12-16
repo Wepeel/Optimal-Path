@@ -43,23 +43,21 @@ const initialize_db_connection = async ()=>
     }
 }
 
-const get_viable_hospitals = async (req, res)=>
+const get_viable_hospitals = async (location, department)=>
 {
     const num_hospitals = 5;
-    const location = req.body.location;
-    const department = req.body.department;
     
     let temp_hospitals = hospitals.filter(hosp=>
     {
         return hosp.load < 100;
     });
 
-    viable_hospitals = temp_hospitals.sort((a, b)=>
+    let viable_hospitals;
+    viable_hospitals.list = temp_hospitals.sort((a, b)=>
     {
         return get_distance(b, location) - get_distance(a, location);
     }).slice(num_hospitals);
 
-    res.send(viable_hospitals)
     return viable_hospitals;
 }
 
