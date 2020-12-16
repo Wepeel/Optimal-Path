@@ -32,9 +32,9 @@ const initialize_db_connection = async ()=>
         await mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true });
         var temp_hospitals = await Hospital.find({});
         hospitals = [];
-        for ({name, longitude, latitude} of temp_hospitals)
+        for ({_id, name, longitude, latitude} of temp_hospitals)
         {
-            hospitals.push({name, longitude,latitude});
+            hospitals.push({_id, name, longitude,latitude});
         }
     }
     catch(err)
@@ -49,23 +49,18 @@ const get_viable_hospitals = async (req, res)=>
     let location = req.body.location;
     let department = req.body.department;
     let viable_hospitals = [];
-    hospitals.forEach(async (hosp)=>
+    await Promise.all(hospitals.map(async (hosp)=>
     {
-        /*let doctors = await Doctor.find({});
-        if(
-        doctors.includes(doc=>
-        {
-            return doc.hospital == hosp.name && doc.department == department;
-        })
-        )
+        if (await Doctor.exists({department:department, hospital:hosp._id}))
         // If there is a doctor that matches the needed hospital and criteria
-        {*/
+        {
             if (Math.floor(get_distance(hosp, location)/1000) <= radius)
             {
                 viable_hospitals.push(hosp);
             }
-        //}
-    });
+        }
+    }));
+
 
     res.send(viable_hospitals)
     return viable_hospitals;

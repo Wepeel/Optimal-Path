@@ -17,7 +17,7 @@ const doctorSchema = new Schema(
 
     hospital:
     {
-        type: String,
+        type: mongoose.ObjectId,
         required: true
     },
 
