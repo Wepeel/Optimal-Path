@@ -21,6 +21,12 @@ const hospitalSchema = new Schema(
         required: true
     },
 
+    load_percentage:
+    {
+        type: Number,
+        required: true
+    }
+
 }, { timestamps: true });
 
 const Hospital = mongoose.model('Hospital', hospitalSchema);
