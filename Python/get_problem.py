@@ -1,5 +1,6 @@
 import socket
 import json
+import ast
 
 dic = {
     'nausea': 'nausea',
@@ -45,7 +46,7 @@ imp_symptoms = {
 
 IP = '127.0.0.1'
 
-PORT = 5555
+PORT = 32654
 
 
 def any_in(a, b):
@@ -56,6 +57,8 @@ def understand_problem(symptoms):
     for problem in problems:
         if any_in(symptoms, data[problem]) and any_in(symptoms, imp_symptoms[problem]):
             return problem
+    else:
+        return 'other'
 
 
 def translate_symptoms(symptoms):
@@ -75,11 +78,10 @@ def main():
         # handle requests until user asks to exit
         rec = client_socket.recv(8192).decode()
         rec = json.loads(rec)
-        symptom_codes = rec['symptoms']
+        symptom_codes = rec["symptoms"]
         if rec['breathing'] == 1:
             symptom_codes += 'difbr'
         res = translate_symptoms(symptom_codes)
-        print(res)
         client_socket.send(res.encode())
         print("Closing connection")
         client_socket.close()

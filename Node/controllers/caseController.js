@@ -8,12 +8,13 @@ const {get_viable_hospitals, get_distance} = require('./hospitalController');
 const case_post = (req, res)=>
 {
     let data = req.body;
+    console.log(data);
     const location = {longitude:31.790210182152045, latitude:35.215105759686786};
     const stable = data.stable;
     let department;
 
     const client = new net.Socket();
-    client.connect(5555, '127.0.0.1',()=>
+    client.connect(32654, '127.0.0.1',()=>
     {
         client.write(JSON.stringify(data));
     })

@@ -6,9 +6,12 @@
 
         <% if (patients.length> 0) {%>
             <% patients.forEach(patient=>{ %>
+                <% if (patient.hospital == "5fd924e175aa0c4b7c984017") %>
+                <%{%>
                 <a href="/patients/<%= patient._id %>">
                     <h3><%= patient.first_name %> <%= patient.last_name%></h3>
                 </a>
+                <%}%>
             <% }) %>
         <% }else{ %>
             <p>No patients</p>

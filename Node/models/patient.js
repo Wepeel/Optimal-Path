@@ -17,7 +17,7 @@ const patientSchema = new Schema(
 
     hospital:
     {
-        type: String
+        type: mongoose.ObjectId
     }
 
 }, { timestamps: true });

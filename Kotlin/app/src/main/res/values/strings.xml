@@ -1,0 +1,58 @@
+<resources>
+    <string name="app_name">My Application</string>
+
+    <string-array name="Breath">
+        <item>יש נשימה</item>
+        <item>קשיי נשימה</item>
+        <item>ללא נשימה</item>
+    </string-array>
+
+    <string-array name="Beat">
+        <item>דופק נימוש</item>
+        <item>דופק חלש</item>
+        <item>אין דופק</item>
+    </string-array>
+
+    <string-array name="Avpu">
+        <item>תגובה מלאה</item>
+        <item>תגובה למילים</item>
+        <item>תגובה לגירוי פיזי</item>
+        <item>אין תגובה</item>
+    </string-array>
+
+    <string-array name="Pains">
+        <item></item>
+        <item>ראש</item>
+        <item>צוואר</item>
+        <item>חזה</item>
+        <item>יד ימין</item>
+        <item>יד שמאל</item>
+        <item>בטן</item>
+        <item>גב</item>
+        <item>רגל ימין</item>
+        <item>רגל שמאל</item>
+    </string-array>
+
+    <string-array name="Symptoms" >
+        <item></item>
+        <item>בחילה</item>
+        <item>גובה ידיים לא שווה</item>
+        <item>דיבור מבולבל</item>
+        <item>דפיקות לב</item>
+        <item>התארכות נשיפה</item>
+        <item>זיעה קרה</item>
+        <item>חולשה</item>
+        <item>חום</item>
+        <item>חרדה ובלבול</item>
+        <item>כאבים בחזה</item>
+        <item>כיחלון מרכזי ופריפרי</item>
+        <item>פציאליס</item>
+        <item>פרכוס לפרק זמן ארוך</item>
+        <item>צפצופים</item>
+        <item>קוצר נשימה</item>
+        <item>קצף מהפה</item>
+        <item>שימוש בשרירי עזר לנשימה</item>
+        <item>שיעול</item>
+        <item>שיעול לח</item>
+    </string-array>
+</resources>
